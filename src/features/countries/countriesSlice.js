@@ -1,12 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
-import countryService from '../../services/countries';
+import { createSlice } from "@reduxjs/toolkit";
+import countryService from "../../services/countries";
 
 export const countriesSlice = createSlice({
-  name: 'countries',
+  name: "countries",
   initialState: {
     countries: [],
     isLoading: true,
-    search: '',
+    search: "",
   },
   reducers: {
     getCountries(state, action) {
@@ -17,6 +17,9 @@ export const countriesSlice = createSlice({
     },
     search(state, action) {
       state.search = action.payload;
+    },
+    fav(state, action) {
+      state.fav = action.payload;
     },
   },
 });
@@ -29,6 +32,6 @@ export const initializeCountries = () => {
   };
 };
 
-export const { getCountries, isLoading, search } = countriesSlice.actions;
+export const { getCountries, isLoading, search, fav } = countriesSlice.actions;
 
 export default countriesSlice.reducer;
