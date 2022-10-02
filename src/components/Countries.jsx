@@ -1,28 +1,33 @@
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import {
   initializeCountries,
   search,
 } from "../features/countries/countriesSlice";
 
 import ListGroup from "react-bootstrap/ListGroup";
-import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
+import Card from "react-bootstrap/Card";
+import {
+  addItem,
+  removeItem,
+  favoritesSlice,
+} from "../features/countries/favoritesSlice.js";
 import { LinkContainer } from "react-router-bootstrap";
-import { Button } from "bootstrap";
+// import { Button } from "bootstrap";
 
-const Countries = () => {
+const Countries = (country, value) => {
   const dispatch = useDispatch();
 
   const countriesList = useSelector((state) => state.countries.countries);
   const loading = useSelector((state) => state.countries.isLoading);
   const searchInput = useSelector((state) => state.countries.search);
+  // const favoritesList = useSelector((state) => state.favorites.favorites);
 
   useEffect(() => {
     dispatch(initializeCountries());
@@ -69,58 +74,69 @@ const Countries = () => {
           })
           .map((country) => (
             <Col className="mt-5" key={country.name.official}>
-              <LinkContainer
-                to={`/countries/${country.name.common}`}
-                state={{ country: country }}
-              >
-                <Card className="h-100">
-                  <Card.Img
-                    variant="top"
-                    src={country.flags.svg}
-                    className="rounded h-50"
-                    style={{
-                      objectFit: "cover",
-                      minHeight: "200px",
-                      maxHeight: "200px",
-                    }}
-                  />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title>{country.name.common}</Card.Title>
-                    <Card.Subtitle className="mb-5 text-muted">
-                      {country.name.official}
-                    </Card.Subtitle>
-                    <ListGroup
-                      variant="flush"
-                      className="flex-grow-1 justify-content-end"
-                    >
-                      <ListGroup>
-                        <button
-                          className="task-button"
-                          // onClick={this.handleClickOpen}
-                          // target="_blank"
-                        >
-                          Favorite
-                        </button>
-                      </ListGroup>
-                      <ListGroup.Item>
-                        <i className="bi bi-translate me-2"></i>
-                        {Object.values(country.languages || {}).join(", ")}
-                      </ListGroup.Item>
-                      <ListGroup.Item>
-                        <i className="bi bi-cash-coin me-2"></i>
-
-                        {Object.values(country.currencies || {})
-                          .map((currency) => currency.name)
-                          .join(", ")}
-                      </ListGroup.Item>
-                      <ListGroup.Item>
-                        <i className="bi bi-people me-2"></i>
-                        {country.population}
-                      </ListGroup.Item>
+              {/* <CountryCard key={country.name.common} country={country} /> */}
+              <Card className="h-100">
+                <Card.Img
+                  variant="top"
+                  src={country.flags.svg}
+                  className="rounded h-50"
+                  style={{
+                    objectFit: "cover",
+                    minHeight: "200px",
+                    maxHeight: "200px",
+                  }}
+                />
+                <Card.Body className="d-flex flex-column">
+                  <Card.Title>{country.name.common}</Card.Title>
+                  <Card.Subtitle className="mb-5 text-muted">
+                    {country.name.official}
+                  </Card.Subtitle>
+                  <ListGroup
+                    variant="flush"
+                    className="flex-grow-1 justify-content-end"
+                  >
+                    <ListGroup>
+                      <button
+                        onClick={(e) => {
+                          dispatch(addItem(country));
+                        }}
+                      >
+                        Add Favorite
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          dispatch(removeItem(country));
+                        }}
+                      >
+                        Remove Favorite
+                      </button>
                     </ListGroup>
-                  </Card.Body>
-                </Card>
-              </LinkContainer>
+                    <ListGroup.Item>
+                      <i className="bi bi-translate me-2"></i>
+                      {Object.values(country.languages || {}).join(", ")}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <i className="bi bi-cash-coin me-2"></i>
+
+                      {Object.values(country.currencies || {})
+                        .map((currency) => currency.name)
+                        .join(", ")}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <i className="bi bi-people me-2"></i>
+                      {country.population}
+                    </ListGroup.Item>
+                  </ListGroup>
+
+                  <LinkContainer
+                    to={`/countries/${country.name.common}`}
+                    state={{ country: country }}
+                  >
+                    <button> See more</button>
+                  </LinkContainer>
+                </Card.Body>
+              </Card>
+              ;
             </Col>
           ))}
       </Row>
